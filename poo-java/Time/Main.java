@@ -21,6 +21,6 @@ public class Main {
   
       System.out.println(time1.getArtilheiro());
       System.out.println(time1.listar());
-  
+
     }
   }

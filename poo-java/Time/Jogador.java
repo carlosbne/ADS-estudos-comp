@@ -11,7 +11,6 @@ public class Jogador {
         this.camisa = camisa;
         this.gols = gols;
     }
-
     // getters
     public int getGols() {
         return gols;

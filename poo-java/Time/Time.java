@@ -32,7 +32,6 @@ public class Time {
         }
         return artilheiro;
     }
-
     // setters
     public void inserirJogador(Jogador jogador) {
         jogadores.add(jogador);
