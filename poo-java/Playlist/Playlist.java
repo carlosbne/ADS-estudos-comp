@@ -1,7 +1,7 @@
+import java.time.Duration;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-public @interface Timespan;
 
 public class Playlist {
   private String nome;
@@ -18,21 +18,22 @@ public class Playlist {
     musicas.add(musica);
   }
 
-  public void listar(Musica musica) {
+  public void listar() {
     for (Musica m : musicas) {
-      System.out.println(m + " ,");
+      System.out.println(m);
     }
   }
-  public Timespan tempoTotal(){
-    Timespan tempoTotal = new Timespan();
+
+  public Duration tempoTotal() {
+    Duration tempoTotal = Duration.ZERO;
     for (Musica m : musicas) {
-      tempoTotal.add(m.getDuracao());
+      tempoTotal = tempoTotal.plus(m.getDuracao());
     }
     return tempoTotal;
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return "Nome: " + this.nome + ", Descricao: " + this.descricao + ", Musicas: " + this.musicas;
   }
 }

@@ -1,13 +1,14 @@
+import java.time.Duration;
 import java.util.Date;
 
-class Musica{
+class Musica {
   private String titulo;
   private String artista;
   private String album;
-  private Timespan duracao;
+  private Duration duracao;
   private Date data;
 
-  public Musica(String titulo, String artista, String album, int duracao, Date data){
+  public Musica(String titulo, String artista, String album, Duration duracao, Date data) {
     this.titulo = titulo;
     this.artista = artista;
     this.album = album;
@@ -15,40 +16,41 @@ class Musica{
     this.data = data;
   }
 
-  public String getTitulo(){
+  public String getTitulo() {
     return this.titulo;
   }
 
-  public String getArtista(){
+  public String getArtista() {
     return this.artista;
   }
 
-  public String getAlbum(){
+  public String getAlbum() {
     return this.album;
   }
 
-  public int getDuracao(){
+  public Duration getDuracao() {
     return this.duracao;
   }
 
-  public Date getData(){
+  public Date getData() {
     return this.data;
   }
 
-  public void setTitulo(String titulo){
+  public void setTitulo(String titulo) {
     this.titulo = titulo;
   }
 
-  public void setArtista(String artista){
+  public void setArtista(String artista) {
     this.artista = artista;
   }
 
-  public void setAlbum(String album){
+  public void setAlbum(String album) {
     this.album = album;
   }
 
   @Override
-  public String toString(){
-    return "Titulo: " + this.titulo + ", Artista: " + this.artista + ", Album: " + this.album + ", Duracao: " + this.duracao + ", Data: " + this.data;
+  public String toString() {
+    return "Titulo: " + this.titulo + ", Artista: " + this.artista + ", Album: " + this.album +
+        ", Duracao: " + this.duracao.toMinutes() + " minutos, Data: " + this.data;
   }
 }
