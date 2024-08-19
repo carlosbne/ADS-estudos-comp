@@ -32,6 +32,31 @@ int inserirListaInicio(numero) {
   }
 }
 
+int removeInicio() {
+  struct ListaCircular *velho, *fim;
+
+  if (inicio == NULL) {
+    return -1;
+  } 
+  velho = inicio;
+  
+  if (inicio->proximo == inicio) {
+    inicio = NULL; 
+  } else {
+    fim = inicio;
+    while (fim->proximo != inicio) {
+      fim = fim->proximo;
+    }
+    fim->proximo = inicio->proximo;
+    inicio = inicio->proximo;  
+  }
+  
+  int valorRemovido = velho->numero; 
+  free(velho);  
+  return valorRemovido;  
+}
+
+
 // Função para listar numeros
 void listarElementos() {
   struct ListaCircular *atual = inicio;
