@@ -1,5 +1,6 @@
 public class PilhasDuplas implements Pilha{
     private int capacidade;
+    private int capacidadeMinima;
     private Object[] array;
     private int temporariaVermelho; //temporaria topo da pilha vermelha
     private int temporariaPreto; //temporaria topo pilha preta
@@ -31,7 +32,7 @@ public class PilhasDuplas implements Pilha{
         Object b[] = new Object[novaCapacidade];
 
         //copia pilha vermelha a partir do inicio
-        for(int f = 0; f < temporariaVermelho; f++)
+        for(int f = 0; f <= temporariaVermelho; f++)
             b[f]=array[f];
 
 
@@ -47,10 +48,9 @@ public class PilhasDuplas implements Pilha{
         this.capacidade = novaCapacidade;
     }
 
-
     public void pushPilhaVermelha(Object o){
         // confere se a pilha vermelha bate na preta
-        if(temporariaVermelho + 1 == temporariaPreto || temporariaVermelho >= capacidade){
+        if(estaCheio()){
             //atualizar tamanho array
             atualizarTamanhoArray();
         }
@@ -59,7 +59,7 @@ public class PilhasDuplas implements Pilha{
 
     public void pushPilhaPreta(Object o){
         //confere se a pilha preta bate na vermelha
-        if(temporariaPreto - 1 == temporariaVermelho){
+        if(estaCheio()){
            //atualiza tamanho array
            atualizarTamanhoArray();
         }
@@ -67,19 +67,104 @@ public class PilhasDuplas implements Pilha{
     }
     
     
+    private void reduzirArray() {
+        int novaCapacidade = Math.max(capacidadeMinima, capacidade / 2);
+        
+        // Só reduz se a nova capacidade for menor que a atual
+        if (novaCapacidade >= capacidade) {
+            return;
+        }
+        
+        Object[] novoArray = new Object[novaCapacidade];
+        
+        // Copia pilha vermelha
+        for (int i = 0; i <= temporariaVermelho; i++) {
+            novoArray[i] = array[i];
+        }
+        
+        // Copia pilha preta
+        int qtdPretos = capacidade - temporariaPreto;
+        int novoTopoPreto = novaCapacidade - qtdPretos;
+        
+        for (int i = 0; i < qtdPretos; i++) {
+            novoArray[novoTopoPreto + i] = array[temporariaPreto + i];
+        }
+        
+        this.array = novoArray;
+        this.temporariaPreto = novoTopoPreto;
+        this.capacidade = novaCapacidade;
+        
+        System.out.println("Array REDUZIDO para capacidade: " + capacidade);
+    }
+
+    // verifica se precisa reduzir
+    private void verificarReducao() {
+        int totalElementos = getTotalElementos();
+        
+        // Se a utilização for ≤ 1/3 da capacidade, reduz
+        if (capacidade > capacidadeMinima && totalElementos <= capacidade / 3) {
+            reduzirArray();
+        }
+    }
+
+    //pop da pilha vermelha
+    public Object popPilhaVermelha() {
+        if (vermelhaVazia()) {
+            throw new PilhaVaziaExcecao("A Pilha vermelha está vazia");
+        }
+        Object elemento = array[temporariaVermelho];
+        array[temporariaVermelho] = null; // libera referência
+        temporariaVermelho--;
+        
+        verificarReducao(); // verifica se precisa reduzir dps de remover
+        
+        return elemento;
+    }
+
+    // pop da pilha preta
+    public Object popPilhaPreta() {
+        if (pretaVazia()) {
+            throw new PilhaVaziaExcecao("A Pilha preta está vazia");
+        }
+        Object elemento = array[temporariaPreto];
+        array[temporariaPreto] = null; // libera referência
+        temporariaPreto++;
+        
+        verificarReducao(); // verficia se precisa reduzir
+        
+        return elemento;
+    }
+
+
+    // metodos getters para testar
+     public int getCapacidade() {
+        return capacidade;
+    }
+    
+    public int getTamanhoVermelha() {
+        return temporariaVermelho + 1;
+    }
+    
+    public int getTamanhoPreta() {
+        return capacidade - temporariaPreto;
+    }
+
     // verifica a quantidade de elementos na pilha
     private int getTotalElementos() {
         return (temporariaVermelho + 1) + (capacidade - temporariaPreto);
     }
 
+
+    // Metodos para testar e ver arrays
     public void mostrar(){
+        System.out.println("=== Estado das Pilhas ===");
         System.out.println("Capacidade: " + capacidade);
         System.out.println("Total elementos: " + getTotalElementos());
-        System.out.println("Pilha Vermelha: " + toStringVermelha());
-        System.out.println("Pilha Preta: " + toStringPreta());
+        System.out.println("Pilha Vermelha (topo → base): " + toStringVermelha());
+        System.out.println("Pilha Preta (topo → base): " + toStringPreta());
         System.out.println("Array completo: " + java.util.Arrays.toString(array));
         System.out.println("---");
-    }
+    } 
 
     // Converte a pilha vermelha para string
     public String toStringVermelha() {
@@ -102,27 +187,5 @@ public class PilhasDuplas implements Pilha{
         sb.append("]");
         return sb.toString();
     }
-
-/*     public boolean isEmpty(){
-        return t == -1;
-    }
-
-    public int size(){
-        return t + 1;
-    }
-
-
-    public Object pop()throws PilhaVaziaExcecao{
-        if(isEmpty())
-            throw new PilhaVaziaExcecao("A Pilha está vazia");
-        Object r = a[t--];
-        return r;
-    }
-
-    public Object top()throws PilhaVaziaExcecao{
-        if(isEmpty())
-            throw new PilhaVaziaExcecao("A Pilha está vazia");
-        return a[t];
-    }*/
 
 } 
